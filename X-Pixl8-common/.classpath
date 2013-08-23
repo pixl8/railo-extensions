@@ -3,18 +3,17 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Railo-Loader"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/javax.servlet.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/guava-13.0.1.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/jackson-annotations-2.1.4.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/jackson-core-2.1.4.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/jackson-databind-2.1.4.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/javax.servlet.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/joda-time-2.2.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/json-20090211.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/json-schema-core-1.0.1.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/json-schema-validator-2.0.0.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/libphonenumber-5.3.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/mail-1.4.6.jar"/>
-	<classpathentry kind="lib" path="/Users/mic/libs/pixl8-common/rhino-1.7R4.jar"/>
+	<classpathentry kind="lib" path="libs/guava-13.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/jackson-annotations-2.1.4.jar"/>
+	<classpathentry kind="lib" path="libs/jackson-core-2.1.4.jar"/>
+	<classpathentry kind="lib" path="libs/jackson-databind-2.1.4.jar"/>
+	<classpathentry kind="lib" path="libs/javax.servlet.jar"/>
+	<classpathentry kind="lib" path="libs/joda-time-2.2.jar"/>
+	<classpathentry kind="lib" path="libs/json-20090211.jar"/>
+	<classpathentry kind="lib" path="libs/json-schema-core-1.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/json-schema-validator-2.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/libphonenumber-5.3.jar"/>
+	<classpathentry kind="lib" path="libs/mail-1.4.6.jar"/>
+	<classpathentry kind="lib" path="libs/rhino-1.7R4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
