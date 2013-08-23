@@ -1,0 +1,10 @@
+bin/*
+**/.DS_Store
+**/.svn/
+*.class
+*.rc
+*.lock
+*.DS_Store
+*.swp
+*.out
+/*.iml
