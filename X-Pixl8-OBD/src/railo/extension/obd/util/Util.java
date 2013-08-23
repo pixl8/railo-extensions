@@ -3,6 +3,8 @@ package railo.extension.obd.util;
 import java.lang.reflect.Method;
 
 import railo.commons.io.res.Resource;
+import railo.loader.engine.CFMLEngine;
+import railo.loader.engine.CFMLEngineFactory;
 import railo.runtime.Mapping;
 import railo.runtime.PageContext;
 import railo.runtime.config.ConfigWeb;
@@ -17,8 +19,9 @@ public class Util {
 	
 	public static Mapping getApplicationMapping(PageContext pc,Cast caster,String logicalPath, Resource physical, Resource archive) throws PageException {
 		ConfigWeb cw = pc.getConfig();
+		
 		// TODO add support for archives, for this we need a method also accept archives
-		if(getApplicationMapping==null) {
+		if(getApplicationMapping==null || getApplicationMapping.getDeclaringClass()!=cw.getClass()) {
 			try {
 				getApplicationMapping=cw.getClass().getMethod("getApplicationMapping", ARGS);
 			} catch (Throwable t) {
@@ -32,5 +35,4 @@ public class Util {
 			throw caster.toPageException(t);
 		}
 	}
-	
 }
