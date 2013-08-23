@@ -1,0 +1,15 @@
+**/.DS_Store
+**/.svn/
+/*.project
+va specific
+*.class
+*.rc
+## generic files to ignore
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+pom.xml
+/.idea/
+/*.iml
