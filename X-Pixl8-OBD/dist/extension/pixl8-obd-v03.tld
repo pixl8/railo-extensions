@@ -1,0 +1,54 @@
+<!DOCTYPE taglib PUBLIC "-//Railo//DTD CFML Tag Library 1.0//EN"
+	"dtd/web-cfmtaglibrary_1_0.dtd">
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<cfml-version>1.0</cfml-version>
+	<short-name>morpheus</short-name>
+	<uri>http://www.getrailo.com/morpheus</uri>
+	<display-name>OBD</display-name>
+	<description>Open Bluedragon compatibility tags</description>
+	<name-space>cf</name-space>
+	<name-space-separator></name-space-separator>
+	<el>
+		<el-class>railo.transformer.cfml.expression.CFMLExprTransformer</el-class>
+	</el>
+	
+	
+	<!-- Mapping --> 
+	<tag>
+		<name>mapping</name>
+		<tag-class>railo.extension.obd.tag.TagMapping</tag-class>
+		<body-content>empty</body-content>
+		<body-rtexprvalue>false</body-rtexprvalue>
+		<description>does a per application mapping on the fly</description>
+		<attribute-type>fixed</attribute-type>
+		<attribute>
+			<type>string</type>
+			<name>logicalpath</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>The logical path to create.</description>
+		</attribute>
+		<attribute>
+			<type>string</type>
+			<name>relativepath</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>A relative path to bind to</description>
+		</attribute>
+		<attribute>
+			<type>string</type>
+			<name>directorypath</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>A directory path to bind to</description>
+		</attribute>
+		<attribute>
+			<type>string</type>
+			<name>archive</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>A archive path to bind to</description>
+		</attribute>
+	</tag>
+</taglib>
