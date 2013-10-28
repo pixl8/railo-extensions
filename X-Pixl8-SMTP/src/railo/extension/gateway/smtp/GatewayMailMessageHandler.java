@@ -3,9 +3,13 @@ package railo.extension.gateway.smtp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
@@ -35,6 +39,9 @@ public class GatewayMailMessageHandler implements MessageHandler {
 	private int statusCode = 0;
 	private String rejectMessage;
 	
+	private final String uuid;
+	private final Struct allRecipients;
+	
 	/**
 	 * initializes a Handler with max data length limit
 	 * 
@@ -57,6 +64,9 @@ public class GatewayMailMessageHandler implements MessageHandler {
 			
 			remoteAddress = context.getRemoteAddress().toString();
 		}
+		
+		uuid = UUID.randomUUID().toString();
+		allRecipients = SMTPGateway.createStruct();
 		
 		countTotal.incrementAndGet();
 	}
@@ -94,9 +104,11 @@ public class GatewayMailMessageHandler implements MessageHandler {
 	@Override
 	public void recipient( String to ) {
 		
-		Struct struct = gateway.invokeListenerAccept( this.from, to, remoteAddress );	// listener should add data to struct if needed
+		Struct struct = gateway.invokeListenerAccept( this.from, to, remoteAddress, this.uuid );			// listener should add data to struct if needed
+		
+		this.allRecipients.put( to, struct );
 				
-		if ( (Boolean) struct.get( SMTPGateway.LISTENER_ACCEPT_KEY_RETURN_REJECT, Boolean.FALSE ) ) {	// rejected
+		if ( (Boolean) struct.get( SMTPGateway.LISTENER_ACCEPT_KEY_RETURN_REJECT, Boolean.FALSE ) ) {		// rejected
 			
 			try {
 			
@@ -144,9 +156,11 @@ public class GatewayMailMessageHandler implements MessageHandler {
     		struct.put( "SentDate", message.getSentDate() );
 
     		struct.put( "ReplyTo", SMTPGateway.toRailoArray( message.getReplyTo() ) );
-    		struct.put( "Recipients", SMTPGateway.toRailoArray( message.getAllRecipients() ) );
     		
-    		gateway.invokeListenerDeliver( struct );    		
+    		struct.put( "RecipientList", this.allRecipients );
+    		struct.put( "Recipients", message.getAllRecipients() );
+    		
+    		gateway.invokeListenerDeliver( struct, this.uuid );    		
 		} 
 		catch ( MessagingException e ) {
 

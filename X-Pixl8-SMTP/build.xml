@@ -7,7 +7,7 @@
     <target name="package">
         
     	<property name="dist.dir" value="dist"/>
-    	<property name="dist.file" value="railo-ext-cfsmtp-01c"/>
+    	<property name="dist.file" value="railo-ext-cfsmtp-01h"/>
     	
     	<delete dir="dist" />
 

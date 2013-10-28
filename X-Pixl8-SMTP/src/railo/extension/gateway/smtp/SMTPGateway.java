@@ -42,6 +42,7 @@ public class SMTPGateway extends GatewaySupport {
 	public static String LISTENER_ACCEPT_KEY_FROM = "from";
 	public static String LISTENER_ACCEPT_KEY_TO = "to";
 	public static String LISTENER_ACCEPT_KEY_IP = "ipAddress";
+	public static String LISTENER_ACCEPT_KEY_ID = "UniqueId";
 
 	public static String LISTENER_ACCEPT_KEY_RETURN_REJECT = "reject";
 	public static String LISTENER_ACCEPT_KEY_RETURN_CODE = "code";
@@ -69,6 +70,8 @@ public class SMTPGateway extends GatewaySupport {
 		
 		this.railo = CFMLEngineFactory.getInstance();
 		
+		/*/		moved to _doStart() due to http://code.google.com/p/subethasmtp/issues/detail?id=63
+
 		long maxMessageLength = this.config.getLong( CONFIG_MAX_MESSAGE_LENGTH, 0 );
 		
 		info( this.getClass().getName() + ".maxMessageLength: " + maxMessageLength );
@@ -82,7 +85,7 @@ public class SMTPGateway extends GatewaySupport {
 		String host = this.config.getString( CONFIG_SMTP_HOSTNAME, null );
 		
 		if ( host != null )
-			smtpServer.setHostName( host );
+			smtpServer.setHostName( host );	//*/
 	}
 	
 	
@@ -93,24 +96,54 @@ public class SMTPGateway extends GatewaySupport {
 	}
 
 	@Override
-	protected void _doStart() throws PageException {
-
-		info( this.getClass().getName() + ": starting smtp server" );
+	protected void _doStart() throws PageException {	
 		
-		smtpServer.start();
+		if ( smtpServer == null ) {		// due to bug http://code.google.com/p/subethasmtp/issues/detail?id=63
 		
-		info( this.getClass().getName() + ": started smtp server" );
+			info( this.getClass().getName() + ": starting smtp server" );
+			
+			long maxMessageLength = this.config.getLong( CONFIG_MAX_MESSAGE_LENGTH, 0 );
+			
+			info( this.getClass().getName() + ".maxMessageLength: " + maxMessageLength );
+			
+			MessageHandlerFactory handlerFactory = new GatewayMessageHandlerFactory( this, maxMessageLength );
+			
+			smtpServer = new SMTPServer( handlerFactory );
+					
+			smtpServer.setPort( this.config.getInt( CONFIG_SMTP_PORT, 25 ) );
+			
+			String host = this.config.getString( CONFIG_SMTP_HOSTNAME, null );
+			
+			if ( host != null )
+				smtpServer.setHostName( host );
+			
+			smtpServer.start();
+			
+			info( this.getClass().getName() + ": started smtp server" );
+		} else {
+			
+			info( this.getClass().getName() + ": smtpServer is not null; ignoring start command." );
+		}		
 	}
 
 	@Override
 	protected void _doStop() throws PageException {
 		
-		info( this.getClass().getName() + ": stopping smtp server" );
-		
-		smtpServer.stop();
-		
-		info( this.getClass().getName() + ": stopped smtp server" );
+		if ( smtpServer != null ) {
+			
+			info( this.getClass().getName() + ": stopping smtp server" );
+			
+			smtpServer.stop();
+			smtpServer = null;
+			
+//			try {
+//				Thread.sleep(2000);
+//			} catch (InterruptedException e) {}
+			
+			info( this.getClass().getName() + ": stopped smtp server" );
+		}
 	}
+	
 	
 	
 	public Struct getStats() {
@@ -137,7 +170,7 @@ public class SMTPGateway extends GatewaySupport {
 	 * @param ipAddress
 	 * @return
 	 */
-	public Struct invokeListenerAccept( String from, String to, String ipAddress ) {
+	public Struct invokeListenerAccept( String from, String to, String ipAddress, String uniqueId ) {
 				
 		String failedInvokeMsg = "Gateway Invocation Failed: " + LISTENER_METHOD_ACCEPT;
 		
@@ -145,7 +178,8 @@ public class SMTPGateway extends GatewaySupport {
 		
 		args.put( LISTENER_ACCEPT_KEY_FROM, from );
 		args.put( LISTENER_ACCEPT_KEY_TO, to );
-		args.put( LISTENER_ACCEPT_KEY_IP, ipAddress );		
+		args.put( LISTENER_ACCEPT_KEY_IP, ipAddress );
+		args.put( LISTENER_ACCEPT_KEY_ID, uniqueId );
 
 		Struct result = createStruct();
 		
@@ -198,11 +232,12 @@ public class SMTPGateway extends GatewaySupport {
 	}
 	
 	
-	public void invokeListenerDeliver( Struct data ) {
+	public void invokeListenerDeliver( Struct data, String uniqueId ) {
 		
 		Struct args = createStruct();
 		
 		args.put( "DATA", data );
+		args.put( LISTENER_ACCEPT_KEY_ID, uniqueId );
 		
 		if ( engine.invokeListener( this, LISTENER_METHOD_DELIVER, args ) ) {
 			
