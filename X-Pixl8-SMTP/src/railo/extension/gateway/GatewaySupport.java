@@ -45,7 +45,7 @@ public abstract class GatewaySupport implements Gateway {
 			_doStart();
 		    state = RUNNING;
 		} 
-		catch (PageException pe) {
+		catch (Throwable pe) {
 			
 			pe.printStackTrace();
 			state=FAILED;
@@ -64,7 +64,7 @@ public abstract class GatewaySupport implements Gateway {
 		    _doStop();
 		    state = STOPPED;
 		} 
-		catch (PageException pe) {
+		catch (Throwable pe) {
 			
 			state=FAILED;
 		    error(pe.getMessage());
@@ -103,7 +103,7 @@ public abstract class GatewaySupport implements Gateway {
 	
 	public void error(String msg) {
 		
-		System.out.println( msg );
+		System.err.println( msg );
 		
 //		engine.log(this,GatewayEngine.LOGLEVEL_ERROR,msg);
 	}
