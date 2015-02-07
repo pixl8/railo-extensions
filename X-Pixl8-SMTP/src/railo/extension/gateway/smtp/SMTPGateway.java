@@ -18,6 +18,7 @@ import javax.mail.Part;
 import javax.mail.internet.MimeMessage;
 
 import org.subethamail.smtp.MessageHandlerFactory;
+import org.subethamail.smtp.auth.EasyAuthenticationHandlerFactory;
 import org.subethamail.smtp.server.SMTPServer;
 
 import railo.extension.gateway.GatewayConfig;
@@ -38,6 +39,7 @@ public class SMTPGateway extends GatewaySupport {
 	
 	public static String LISTENER_METHOD_ACCEPT = "accept";
 	public static String LISTENER_METHOD_DELIVER = "deliver";
+	public static String LISTENER_METHOD_AUTHENTICATE = "authenticate";
 	
 	public static String LISTENER_ACCEPT_KEY_FROM = "from";
 	public static String LISTENER_ACCEPT_KEY_TO = "to";
@@ -47,6 +49,9 @@ public class SMTPGateway extends GatewaySupport {
 	public static String LISTENER_ACCEPT_KEY_RETURN_REJECT = "reject";
 	public static String LISTENER_ACCEPT_KEY_RETURN_CODE = "code";
 	public static String LISTENER_ACCEPT_KEY_RETURN_MESSAGE = "message";
+	
+	public static String LISTENER_AUTHENTICATE_KEY_RETURN_AUTHENTICATED = "authenticated";
+	public static String LISTENER_AUTHENTICATE_KEY_RETURN_MESSAGE = "message";
 	
 	public static final int DEFAULT_REJECT_STATUS_CODE = 530;
 	public static final String DEFAULT_REJECT_MESSAGE = "System is not configured to accept this message";
@@ -107,8 +112,10 @@ public class SMTPGateway extends GatewaySupport {
 			info( this.getClass().getName() + ".maxMessageLength: " + maxMessageLength );
 			
 			MessageHandlerFactory handlerFactory = new GatewayMessageHandlerFactory( this, maxMessageLength );
+			GatewayUsernamePasswordValidator usernamePasswordValidator = new GatewayUsernamePasswordValidator( this );
+			EasyAuthenticationHandlerFactory authenticationFactory = new EasyAuthenticationHandlerFactory( usernamePasswordValidator );
 			
-			smtpServer = new SMTPServer( handlerFactory );
+			smtpServer = new SMTPServer( handlerFactory, authenticationFactory );
 					
 			smtpServer.setPort( this.config.getInt( CONFIG_SMTP_PORT, 25 ) );
 			
@@ -246,6 +253,24 @@ public class SMTPGateway extends GatewaySupport {
 			
 			error( "failed to invoke listener method " + LISTENER_METHOD_DELIVER );
 		}
+	}
+	
+	public Struct invokeListenerAuthenticate( String username, String password ) {
+		Struct args   = createStruct();
+		Struct result = createStruct();
+			
+		result.put( LISTENER_AUTHENTICATE_KEY_RETURN_AUTHENTICATED, Boolean.TRUE );
+		result.put( LISTENER_AUTHENTICATE_KEY_RETURN_MESSAGE, "SMTP Authentication unsuccessful/Bad username or password" );
+		
+		args.put( "USERNAME", username );
+		args.put( "PASSWORD", password );
+		args.put( "RESULT", result );
+		
+		if ( !engine.invokeListener( this, LISTENER_METHOD_AUTHENTICATE, args ) ) {
+			error( "failed to invoke listener method " + LISTENER_METHOD_AUTHENTICATE );
+		}
+		
+		return result;
 	}
 	
 	
