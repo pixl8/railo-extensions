@@ -8,12 +8,9 @@ import railo.loader.engine.CFMLEngineFactory;
 
 public class GatewayConfig {
 
-	
 	private Map config;
 	
-	
-	public GatewayConfig( Map map ) {
-		
+	public GatewayConfig( Map map ) {		
 		config = new TreeMap( String.CASE_INSENSITIVE_ORDER );
 		
 		config.putAll( map );
@@ -21,13 +18,11 @@ public class GatewayConfig {
 	
 	
 	public Map getMap() {
-		
 		return config;
 	}
 	
 	
 	public String getString( String key, String def ) {
-		
 		Object value = config.get( key );
 		
 		if ( !( value instanceof String ) )
@@ -38,11 +33,9 @@ public class GatewayConfig {
 	
 	
 	public int getInt( String key, int def ) {
-		
 		Object value = config.get( key );
 		
 		if ( value != null ) {
-			
 			CFMLEngine railo = CFMLEngineFactory.getInstance(); 
 			
 			try {
@@ -58,11 +51,9 @@ public class GatewayConfig {
 	
 	
 	public long getLong( String key, long def ) {
-		
 		Object value = config.get( key );		
 
 		if ( value != null ) {
-			
 			CFMLEngine railo = CFMLEngineFactory.getInstance();
 			
 			try {

@@ -26,7 +26,7 @@ public class GatewayUsernamePasswordValidator implements UsernamePasswordValidat
 			Boolean authenticated = railo.getCastUtil().toBoolean( authenticationResponse.get( SMTPGateway.LISTENER_AUTHENTICATE_KEY_RETURN_AUTHENTICATED ) ); 
 					
 			if ( !authenticated ) {
-				String  rejectMessage = railo.getCastUtil().toString( authenticationResponse.get( SMTPGateway.LISTENER_AUTHENTICATE_KEY_RETURN_MESSAGE ) );
+				String rejectMessage = railo.getCastUtil().toString( authenticationResponse.get( SMTPGateway.LISTENER_AUTHENTICATE_KEY_RETURN_MESSAGE ) );
 				
 				throw new LoginFailedException( rejectMessage ); 
 			}
