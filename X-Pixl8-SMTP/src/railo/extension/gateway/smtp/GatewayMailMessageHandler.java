@@ -25,6 +25,7 @@ import railo.runtime.type.Struct;
 
 public class GatewayMailMessageHandler implements MessageHandler {
 	
+	private Object identity;
 	private String remoteAddress;
 	private String from;
 	
@@ -63,6 +64,10 @@ public class GatewayMailMessageHandler implements MessageHandler {
 		} else {
 			
 			remoteAddress = context.getRemoteAddress().toString();
+		}
+		
+		if ( context.getAuthenticationHandler() != null ) {
+			this.identity = context.getAuthenticationHandler().getIdentity();
 		}
 		
 		uuid = UUID.randomUUID().toString();
@@ -104,7 +109,7 @@ public class GatewayMailMessageHandler implements MessageHandler {
 	@Override
 	public void recipient( String to ) {
 		
-		Struct struct = gateway.invokeListenerAccept( this.from, to, remoteAddress, this.uuid );			// listener should add data to struct if needed
+		Struct struct = gateway.invokeListenerAccept( this.from, to, remoteAddress, this.uuid, this.identity );			// listener should add data to struct if needed
 		
 		this.allRecipients.put( to, struct );
 				
@@ -160,7 +165,7 @@ public class GatewayMailMessageHandler implements MessageHandler {
     		struct.put( "RecipientList", this.allRecipients );
     		struct.put( "Recipients", message.getAllRecipients() );
     		
-    		gateway.invokeListenerDeliver( struct, this.uuid );    		
+    		gateway.invokeListenerDeliver( struct, this.uuid, this.identity );    		
 		} 
 		catch ( MessagingException e ) {
 

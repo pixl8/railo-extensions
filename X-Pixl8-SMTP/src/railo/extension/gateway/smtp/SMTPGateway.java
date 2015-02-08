@@ -45,6 +45,7 @@ public class SMTPGateway extends GatewaySupport {
 	public static String LISTENER_ACCEPT_KEY_TO = "to";
 	public static String LISTENER_ACCEPT_KEY_IP = "ipAddress";
 	public static String LISTENER_ACCEPT_KEY_ID = "UniqueId";
+	public static String LISTENER_ACCEPT_KEY_IDENTITY = "Username";
 
 	public static String LISTENER_ACCEPT_KEY_RETURN_REJECT = "reject";
 	public static String LISTENER_ACCEPT_KEY_RETURN_CODE = "code";
@@ -177,7 +178,7 @@ public class SMTPGateway extends GatewaySupport {
 	 * @param ipAddress
 	 * @return
 	 */
-	public Struct invokeListenerAccept( String from, String to, String ipAddress, String uniqueId ) {
+	public Struct invokeListenerAccept( String from, String to, String ipAddress, String uniqueId, Object identity ) {
 				
 		String failedInvokeMsg = "Gateway Invocation Failed: " + LISTENER_METHOD_ACCEPT;
 		
@@ -187,6 +188,8 @@ public class SMTPGateway extends GatewaySupport {
 		args.put( LISTENER_ACCEPT_KEY_TO, to );
 		args.put( LISTENER_ACCEPT_KEY_IP, ipAddress );
 		args.put( LISTENER_ACCEPT_KEY_ID, uniqueId );
+		args.put( LISTENER_ACCEPT_KEY_IDENTITY, identity );
+		
 
 		Struct result = createStruct();
 		
@@ -239,12 +242,13 @@ public class SMTPGateway extends GatewaySupport {
 	}
 	
 	
-	public void invokeListenerDeliver( Struct data, String uniqueId ) {
+	public void invokeListenerDeliver( Struct data, String uniqueId, Object identity ) {
 		
 		Struct args = createStruct();
 		
 		args.put( "DATA", data );
 		args.put( LISTENER_ACCEPT_KEY_ID, uniqueId );
+		args.put( LISTENER_ACCEPT_KEY_IDENTITY, identity );
 		
 		if ( engine.invokeListener( this, LISTENER_METHOD_DELIVER, args ) ) {
 			
