@@ -201,12 +201,12 @@ public class SMTPGateway extends GatewaySupport {
 	}
 
 
-	public void invokeListenerDeliver( Struct data, String uniqueId, Object identity ) {
+	public void invokeListenerDeliver( Struct message, String uniqueId, Object identity ) {
 		Struct args = createStruct();
 
-		args.put( "DATA", data );
 		args.put( LISTENER_ACCEPT_KEY_ID, uniqueId );
 		args.put( LISTENER_ACCEPT_KEY_IDENTITY, identity );
+		args.putAll( message );
 
 		if ( !engine.invokeListener( this, LISTENER_METHOD_DELIVER, args ) ) {
 			error( "failed to invoke listener method " + LISTENER_METHOD_DELIVER );

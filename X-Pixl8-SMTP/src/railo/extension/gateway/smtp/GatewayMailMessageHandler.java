@@ -3,10 +3,14 @@ package railo.extension.gateway.smtp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
@@ -17,6 +21,7 @@ import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.TooMuchDataException;
 
 import railo.loader.engine.CFMLEngineFactory;
+import railo.runtime.exp.PageException;
 import railo.runtime.type.Struct;
 
 
@@ -135,19 +140,47 @@ public class GatewayMailMessageHandler implements MessageHandler {
 			MimeMessage message = new MimeMessage( session, in );
 			
 			Struct struct = SMTPGateway.createStruct();
-						
-			struct.put( "MimeMessage"  , message                                                 );
+			
+			Address[] javaRecipients = message.getAllRecipients();
+			Address[] javaReplyTo = message.getReplyTo();
+			Enumeration headerLines = message.getAllHeaderLines();
+			
+			String[] recipients = new String[ javaRecipients.length ];
+			String[] replyTo    = new String[ javaReplyTo.length ];
+			Struct   headers    = gateway.createStruct();
+
+			for( int i=0; i<javaRecipients.length; i++ ){
+				recipients[i] = javaRecipients[i].toString();
+			}
+			for( int i=0; i<javaReplyTo.length; i++ ){
+				replyTo[i] = javaReplyTo[i].toString();
+			}
+			while( headerLines.hasMoreElements() ) {
+				String header = (String) headerLines.nextElement();
+				String[] headerParts = header.split( ":", 2 );
+				
+				if ( headerParts.length == 2 ) {
+					headers.put( headerParts[0], headerParts[1] );
+				}
+				
+			}			
+			
+			struct.put( "Raw"          , gateway.getRawMessage(message)                          );
 			struct.put( "MessageId"    , message.getMessageID()                                  );
 			struct.put( "Size"         , message.getSize()                                       );    		
-			struct.put( "Headers"      , SMTPGateway.toRailoArray( message.getAllHeaderLines() ) );
 			struct.put( "ContentType"  , message.getContentType()                                );
 			struct.put( "Subject"      , message.getSubject()                                    );
 			struct.put( "SentDate"     , message.getSentDate()                                   );
-			struct.put( "ReplyTo"      , SMTPGateway.toRailoArray( message.getReplyTo() )        );
 			struct.put( "RecipientList", this.allRecipients                                      );
-			struct.put( "Recipients"   , message.getAllRecipients()                              );
+			struct.put( "ReplyTo"      , SMTPGateway.toRailoArray( replyTo )                     );
+			struct.put( "Recipients"   , SMTPGateway.toRailoArray( recipients )                  );
+			struct.put( "headers"      , headers                                                 );
 			
-			gateway.invokeListenerDeliver( struct, this.uuid, this.identity );    		
+			try {
+				struct.putAll( gateway.parseMimeMessage( message ) );
+			} catch( PageException e ) {}
+			
+			gateway.invokeListenerDeliver( struct, this.uuid, this.identity );
 		
 		} catch ( MessagingException e ) {
 			throw new IOException( e );
