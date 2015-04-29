@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="buildClassic" basedir="." name="pixl8-extensions-classic">
+	<description>
+        Pixl8 - Common - Classic
+    </description>
+
+  <import file="build-base.xml"/>
+  
+
+  <target name="buildClassic" depends="buildJars" description="generate the distribution">
+
+<!-- doc.json -->
+<echo file="${dist}/classic/doc.json">
+{
+"builtDate":"${NOW}",
+"version":"${bundleversion}${build.number}",
+"id":"${id}",
+"name":"${packagename}",
+"codename":"${packagename}",
+"label":"${label}",
+"description":"${description}",
+ "type":"server",
+ "author":"${author}",
+ "category":"${category}"
+}
+</echo>
+
+
+    <!-- copy the logos -->
+    <copy todir="${dist}/classic">
+      <fileset dir="${build}/images">
+        <include name="**/*.*"/>
+      </fileset>
+    </copy>
+
+    <!-- copy the context necessary -->
+    <copy todir="${temp}/classic">
+      <fileset dir="${build}/classic">
+        <include name="config.xml"/>
+      </fileset>
+    </copy>
+
+
+    <!-- copy the Install.cfc -->
+    <loadfile property="content1" srcFile="${build}/classic/Install.cfc" />
+    <replace haystack="${content1}" needle="{jar-name}" repl="${filename}-${bundleversion}${build.number}.jar" property="content2"/>
+    <replace haystack="${content2}" needle="{fld-name}" repl="${filename}.fld" property="content3"/>
+    <echo message="${content3}" file="${temp}/classic/Install.cfc"/>
+
+    <!-- copy the jars necessary -->
+    <copy todir="${temp}/classic/jars">
+      <fileset dir="${lib}">
+        <include name="**/*.jar"/>
+        <exclude name="**/javax.servlet.jar"/>
+        <exclude name="**/lucee.jar"/>
+      </fileset>
+    </copy>
+
+
+    <!-- copy the jar just build -->
+    <copy todir="${temp}/classic/jars">
+      <fileset dir="${temp}/jars/">
+        <include name="**/*.jar"/>
+      </fileset>
+    </copy>
+
+    <!-- Zip everything  -->
+     <zip destfile="${dist}/classic/extension.zip">
+        <zipfileset dir="${temp}/classic" filemode="777"/>
+        <zipfileset dir="${temp}/flds" prefix="flds" filemode="777"/>
+    </zip>
+		
+  </target>
+
+</project>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="clean" basedir="." name="pixl8-extensions-modern">
+  <description>
+        Pixl8 - Common - Modern
+    </description>
+   
+
+  <import file="build-base.xml"/>
+
+
+  <target name="distModern" depends="buildJars" description="copy source file to temp" >
+    
+
+    <!-- Manifest of the extension -->
+    <echo file="${temp}/modern/META-INF/MANIFEST.MF">Manifest-Version: 1.0
+Built-Date: ${NOW}
+version: "${bundleversion}${build.number}"
+id: "${id}"
+name: "${label}"
+description: "${description}"
+start-bundles: true
+category: "${category}"
+author: "${author}"
+lucee-core-version: "5.0.0.46"
+</echo>
+
+
+    <!-- copy the jars necessary -->
+    <copy todir="${temp}/modern/jars">
+      <fileset dir="${lib}">
+        <include name="**/*.jar"/>
+        <exclude name="**/javax.servlet.jar"/>
+        <exclude name="**/lucee*.jar"/>
+      </fileset>
+    </copy>
+
+    <!-- copy the jar just build -->
+    <copy todir="${temp}/modern/jars">
+      <fileset dir="${temp}/jars/">
+        <include name="**/*.jar"/>
+      </fileset>
+    </copy>
+
+    <!-- copy the logo -->
+    <copy todir="${temp}/modern/META-INF">
+      <fileset dir="${build}/images">
+        <include name="logo.png"/>
+      </fileset>
+    </copy>
+
+    <!-- FLD -->
+    <loadfile property="ld1" srcFile="${build}/modern/obd.fld" />
+    <replace haystack="${ld1}" needle="{base-package}" repl="${packagename}" property="ld2"/>
+    <replace haystack="${ld2}" needle="{bundle-name}" repl="${packagename}" property="ld3"/>
+    <replace haystack="${ld3}" needle="{bundle-version}" repl="${bundleversion}${build.number}" property="ld4"/>
+    <echo message="${ld4}" file="${temp}/flds-modern/${filename}.fld"/>
+    
+
+
+    <!-- Zip everything  -->
+     <zip destfile="${dist}/modern/extension-${filename}-${bundleversion}${build.number}.lex">
+        <zipfileset dir="${temp}/modern"/>
+        <zipfileset dir="${temp}/flds-modern" prefix="flds" filemode="777"/>
+        <zipfileset dir="${temp}/tlds" prefix="tlds" filemode="777"/>
+    </zip>
+    
+  </target>
+
+
+  <target name="buildModern"  depends="distModern" description="clean up" >
+    <!-- <delete dir="${dist}/extension2"/> -->
+  </target>
+
+</project>

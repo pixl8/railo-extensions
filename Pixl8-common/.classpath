@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="lib/guava-13.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-annotations-2.1.4.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.1.4.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-databind-2.1.4.jar"/>
+	<classpathentry kind="lib" path="lib/javax.servlet.jar"/>
+	<classpathentry kind="lib" path="lib/joda-time-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/mail-1.4.6.jar"/>
+	<classpathentry kind="lib" path="lib/lucee.jar"/>
+	<classpathentry kind="lib" path="lib/google-libphonenumber-5-3-0-0.jar"/>
+	<classpathentry kind="lib" path="lib/org-json-2009-2-11.jar"/>
+	<classpathentry kind="lib" path="lib/org-mozilla-javascript-1-7-0-R4.jar"/>
+	<classpathentry kind="lib" path="lib/org-subethamail-3-1-7-0.jar"/>
+	<classpathentry kind="lib" path="lib/com-github-json-schema-all-1-0-1-0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE func-lib PUBLIC "-//Lucee//DTD CFML Function Library 1.0//EN"
+	"dtd/web-cfmfunctionlibrary_1_0.dtd">
+<!-- http://www.getrailo.com/j2ee/dtd/web-jspfunctionlibrary_1_0.dtd -->
+<func-lib>
+	<flib-version>1.00</flib-version>
+	<short-name>OBD</short-name>
+	<uri>http://www.railo.ch/functions/1_0_0</uri>
+	<display-name>OBD</display-name>
+	<description>Open Bluedragon compatibility functions</description>
+	
+
+	<function>
+		<name>MappingAdd</name>
+		<class bundle-name="{bundle-name}" bundle-version="{bundle-version}">{base-package}.function.MappingAdd</class>
+		<description>does a per application mapping on the fly</description>
+		<argument>
+			<name>logicalPath</name>
+			<alias>virtual</alias>
+			<type>String</type>
+			<required>yes</required>
+			<description>The logical path to create.</description>
+		</argument>
+		<argument>
+			<name>directory</name>
+			<alias>directory path,physical</alias>
+			<type>String</type>
+			<required>no</required>
+			<description>A directory path to bind to</description>
+		</argument>
+		<argument>
+			<name>archive</name>
+			<type>string</type>
+			<required>no</required>
+			<description>A archive path to bind to</description>
+		</argument>
+		<return>
+			<type>boolean</type>
+		</return>
+	</function>
+	
+
+	<function>
+		<name>Render</name>
+		<class bundle-name="{bundle-name}" bundle-version="{bundle-version}">{base-package}.function.Render</class>
+		<description></description>
+		<argument>
+			<name>cfml</name>
+			<alias>p1,code,cfm</alias>
+			<type>String</type>
+			<required>yes</required>
+			<description>the cdml code to execute</description>
+		</argument>
+		<return>
+			<type>string</type>
+		</return>
+	</function>
+
+
+	<function>
+		<name>StructListNew</name>
+		<class bundle-name="{bundle-name}" bundle-version="{bundle-version}">{base-package}.function.StructListNew</class>
+		<description>returns a linked struct the same way as StructNew('linked') does</description>
+		<argument>
+			<name>maxsize</name>
+			<alias>maximalsize,max,maximal,size</alias>
+			<type>numeric</type>
+			<required>no</required>
+			<description>the initial capacity</description>
+		</argument>
+		<return>
+			<type>struct</type>
+		</return>
+	</function>
+	
+	
+</func-lib>

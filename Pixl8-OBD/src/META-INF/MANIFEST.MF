@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Export-Package: uk.co.pixl8.obd.function,
+ uk.co.pixl8.obd.tag

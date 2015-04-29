@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="railo-ext-cfsmtp" default="package" basedir=".">
+    <description>packages the project's output as a Railo Extension</description>
+
+
+    <target name="package">
+        
+    	<property name="dist.dir" value="dist"/>
+    	<property name="dist.file" value="railo-ext-cfsmtp-01c"/>
+    	
+    	<delete dir="dist" />
+
+      <jar jarfile="${dist.dir}/lib/${dist.file}.jar" basedir="bin" includes="railo/**" />
+      
+      <copy todir="${dist.dir}/lib" flatten="true">
+        
+        <resources>
+          <file file="lib/subethasmtp-3.1.7.jar" />
+        </resources>
+      </copy>
+
+    	<copy todir="${dist.dir}">
+			  <fileset dir="resources"/>
+		  </copy>
+
+    	<zip destfile="${dist.dir}/${dist.file}.zip" basedir="${dist.dir}" />
+
+      <echo message="Extension Archive built at: ${dist.dir}/${dist.file}.zip" />
+    </target>
+    
+</project>

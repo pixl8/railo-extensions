@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE func-lib PUBLIC "-//Railo//DTD CFML Function Library 1.0//EN"
+	"dtd/web-cfmfunctionlibrary_1_0.dtd">
+<!-- http://www.getrailo.com/j2ee/dtd/web-jspfunctionlibrary_1_0.dtd -->
+<func-lib>
+	<flib-version>1.00</flib-version>
+	<short-name>OBD</short-name>
+	<uri>http://www.pixl8.co.uk/functions/1_0_0</uri>
+	<display-name>OBD</display-name>
+	<description>Common functions</description>
+	
+
+	<function>
+		<name>ValidateJson</name>
+		<class 
+			bundle-name="{bundle-name}" 
+			bundle-version="{bundle-version}">{base-package}.jsonvalidation.function.ValidateJson</class>
+		<description>validate a json string</description>
+		<argument>
+			<name>json</name>
+			<alias>str</alias>
+			<type>string</type>
+			<required>yes</required>
+			<description>String to validate</description>
+		</argument>
+		<argument>
+			<name>schema</name>
+			<type>string</type>
+			<required>yes</required>
+			<description></description>
+		</argument>
+		<return>
+			<type>struct</type>
+		</return>
+	</function>
+	
+	
+</func-lib>

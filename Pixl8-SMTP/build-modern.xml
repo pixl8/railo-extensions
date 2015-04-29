@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="clean" basedir="." name="pixl8-extensions-modern">
+  <description>
+        Pixl8 - Common - Modern
+    </description>
+   
+
+  <import file="build-base.xml"/>
+
+
+  <target name="distModern" depends="buildJars" description="copy source file to temp" >
+    
+
+    <!-- Manifest of the extension -->
+    <echo file="${temp}/modern/META-INF/MANIFEST.MF">Manifest-Version: 1.0
+Built-Date: ${NOW}
+version: "${bundleversion}${build.number}"
+id: "${id}"
+name: "${label}"
+description: "${description}"
+start-bundles: true
+category: "${category}"
+author: "${author}"
+lucee-core-version: "5.0.0.46"
+</echo>
+
+
+    <!-- copy the jars necessary -->
+    <copy todir="${temp}/modern/jars">
+      <fileset dir="${lib}">
+        <include name="**/*.jar"/>
+        <exclude name="**/javax.servlet.jar"/>
+        <exclude name="**/lucee*.jar"/>
+      </fileset>
+    </copy>
+
+    <!-- copy the jar just build -->
+    <copy todir="${temp}/modern/jars">
+      <fileset dir="${temp}/jars/">
+        <include name="**/*.jar"/>
+      </fileset>
+    </copy>
+
+
+    <!-- copy the logo -->
+    <copy todir="${temp}/modern/META-INF">
+      <fileset dir="${build}/images">
+        <include name="logo.png"/>
+      </fileset>
+    </copy>
+
+
+    <!-- copy the SmtpGatewayDriver.cfc -->
+    <loadfile property="eg1" srcFile="${build}/event-gateway/SmtpGatewayDriver.cfc" />
+    <replace haystack="${eg1}" needle="{packagename}" repl="${packagename}" property="eg2"/>
+    <echo message="${eg2}" file="${temp}/modern/event-gateways/SmtpGatewayDriver.cfc"/>
+
+    <!-- copy the SmtpGatewayListener.cfc -->
+    <replace haystack="${filename}" needle="-" repl="/" property="pathPart"/>
+    <echo message="wwwww${pathPart}"/>
+    <loadfile property="egl1" srcFile="${build}/event-gateway-listener/SmtpGatewayListener.cfc" />
+    <echo message="${egl1}" file="${temp}/modern/webcontexts/components/${pathPart}/SmtpGatewayListener.cfc"/>
+
+
+    <!-- Zip everything  -->
+     <zip destfile="${dist}/modern/extension-${filename}-${bundleversion}${build.number}.lex">
+        <zipfileset dir="${temp}/modern"/>
+    </zip>
+    
+  </target>
+
+
+  <target name="buildModern"  depends="distModern" description="clean up" >
+    <!-- <delete dir="${dist}/extension2"/> -->
+  </target>
+
+</project>
