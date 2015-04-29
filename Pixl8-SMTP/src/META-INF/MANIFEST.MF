@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Export-Package: uk.co.pixl8.smtp
+Require-Bundle: javax.mail;bundle-version=1.4.6,
+ org.subethamail;bundle-version=3.1.7.0
+Import-PackageX: lucee.loader.engine
+ ,lucee.runtime.exp
+ ,lucee.runtime.gateway
+ ,lucee.runtime.type

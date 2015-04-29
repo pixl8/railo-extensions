@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="pixl8-extensions-base">
+	<description>
+        Pixl8 - SMTP - Base
+    </description>
+
+
+  <property file="build.properties"/>
+  <buildnumber file="build.number"/>
+
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="lib" location="lib"/>
+  <property name="temp" location="temp"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+
+
+  <tstamp>
+    <format property="NOW" pattern="yyyy-MM-dd HH:mm:ss" />
+  </tstamp>
+
+
+  <path id="classpath">
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+  
+
+  <scriptdef name="replace" language="javascript">
+     <attribute name="haystack" />
+     <attribute name="needle" />
+     <attribute name="repl" />
+     <attribute name="property" />
+     <![CDATA[
+      var text = attributes.get("haystack");
+      var needle = attributes.get("needle");
+      var repl = attributes.get("repl");
+      text=text.trim();
+
+      var regex = new RegExp(needle,"g");
+      text=text.replace(regex,repl);
+      project.setProperty(attributes.get("property"), text);
+     ]]>
+  </scriptdef>
+
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    
+    <delete dir="${temp}"/>
+    <delete dir="${dist}"/>
+
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${dist}/"/>
+  </target>
+
+
+  <target name="compile" depends="init" description="compile the source ">
+    <mkdir dir="${temp}/classes"/>
+    <javac srcdir="${src}" target="1.7" destdir="${temp}/classes" debug="true" debuglevel="lines,vars,source">
+      <classpath refid="classpath" />
+    </javac>
+  </target>
+
+  <target name="buildJars" depends="compile" description="generate the distribution">
+    <jar 
+      jarfile="${temp}/jars/${filename}-${bundleversion}${build.number}.jar" 
+      basedir="${temp}/classes"  
+      manifest="${src}/META-INF/MANIFEST.MF">
+      <manifest>
+        <attribute name="Bundle-Version" value="${bundleversion}${build.number}"/>
+        <attribute name="Built-Date" value="${NOW}"/>
+        <attribute name="Bundle-SymbolicName" value="${packagename}"/>
+      </manifest>
+    </jar>
+  </target>
+
+</project>
